@@ -5,9 +5,12 @@ Trainer: David de Paula Santos Silva
 
 ## Group
 
-- **Group name:** `BlockHash`
-- **Members:** ``, `Fatou FATY`, `Pape LO`, `ELODIE IPARRAGUIRRE` , `Olivier POLYNICE`
-- **Submission date:** `27/08/2026`
+| Élément | Information |
+|---|---|
+| **Nom du groupe** | `BlockHash` |
+| **Membres** | `Fatou FATY`<br>`Pape LO`<br>`ELODIE IPARRAGUIRRE`<br>`Olivier POLYNICE` |
+| **Date de soumission** | `27/08/2026` |
+
 
 
 A full security audit of `VulnerableVault.sol`, a staking vault seeded with 9 deliberately
