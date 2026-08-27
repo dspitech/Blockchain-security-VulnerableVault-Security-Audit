@@ -3,6 +3,13 @@
 **ÉSTIAM Paris · 4BLOCKC / E4CCSN -Blockchain Security · Final Project**
 Trainer: David de Paula Santos Silva
 
+## Group
+
+- **Group name:** `BlockHash`
+- **Members:** ``, `Fatou FATY`, `Pape LO`, `ELODIE IPARRAGUIRRE` , `Olivier POLYNICE`
+- **Submission date:** `27/08/2026`
+
+
 A full security audit of `VulnerableVault.sol`, a staking vault seeded with 9 deliberately
 planted vulnerabilities (4 High, 3 Medium, 2 Low). This repository contains everything the
 project brief asks for, plus working proof-of-concept exploits and a regression suite that
@@ -101,12 +108,6 @@ node --version   # should print v20.x.x
 ```bash
 sudo apt update
 sudo apt install -y python3 python3-pip python3-venv
-```
-
-Also make sure `unzip` and `git` are present (usually already are on Kali):
-
-```bash
-sudo apt install -y unzip git
 ```
 
 ### Step 2 -Install the project's Node dependencies
@@ -323,11 +324,4 @@ work exactly as usual.
 4. **Fix verification** -the identical attack re-run against the corrected contract, proving
    it now reverts, is rejected, or is otherwise safely handled.
 
-## Group
 
-- **Group name:** `[GROUP NAME]`
-- **Members:** `[SURNAME Firstname]`, `[SURNAME Firstname]`, `[SURNAME Firstname]`, `[SURNAME Firstname]`
-- **Submission date:** `[SUBMISSION DATE]`
-
-*(Fill in the placeholders above before submitting -every member must upload the same
-deliverables individually on Teams, per the project brief.)*
