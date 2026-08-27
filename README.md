@@ -65,8 +65,8 @@ If you have the `VulnerableVault-Security-Audit.zip` file:
 
 ```bash
 mkdir -p ~/audit && cd ~/audit
-unzip VulnerableVault-Security-Audit.zip -d vulnerablevault-audit
-cd vulnerablevault-audit
+git clone https://github.com/dspitech/Blockchain-security-VulnerableVault-Security-Audit.git
+cd Blockchain-security-VulnerableVault-Security-Audit
 ```
 
 Confirm you're in the right place (you should see `contracts/`, `test/`, `docs/`):
