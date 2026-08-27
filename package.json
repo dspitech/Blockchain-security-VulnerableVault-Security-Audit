@@ -1,0 +1,21 @@
+{
+  "name": "vulnerablevault-security-audit",
+  "version": "1.0.0",
+  "description": "ESTIAM 4BLOCKC/E4CCSN final project - security audit of VulnerableVault.sol",
+  "private": true,
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "compile": "node scripts/compile.js",
+    "test": "hardhat test --no-compile"
+  },
+  "keywords": ["solidity", "security-audit", "smart-contract", "slither", "hardhat"],
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.29.1",
+    "solc": "^0.8.20"
+  }
+}
