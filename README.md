@@ -1,23 +1,18 @@
-# Smart Contract Security Audit — VulnerableVault.sol
+# Smart Contract Security Audit -VulnerableVault.sol
 
-**ÉSTIAM Paris · 4BLOCKC / E4CCSN — Blockchain Security · Final Project**
+**ÉSTIAM Paris · 4BLOCKC / E4CCSN -Blockchain Security · Final Project**
 Trainer: David de Paula Santos Silva
-
-> 🇫🇷 Looking for the French version? See [`README.fr.md`](README.fr.md).
 
 A full security audit of `VulnerableVault.sol`, a staking vault seeded with 9 deliberately
 planted vulnerabilities (4 High, 3 Medium, 2 Low). This repository contains everything the
 project brief asks for, plus working proof-of-concept exploits and a regression suite that
-proves every fix actually holds — not just a written claim.
+proves every fix actually holds -not just a written claim.
 
 ## What's in here
 
 | Deliverable | Location |
 |---|---|
-| Mini audit report (EN) | [`docs/report/Audit_Report_EN.docx`](docs/report/Audit_Report_EN.docx) / `.pdf` |
-| Rapport d'audit (FR) | [`docs/report/Rapport_Audit_FR.docx`](docs/report/Rapport_Audit_FR.docx) / `.pdf` |
 | Corrected contract | [`contracts/VulnerableVaultFixed.sol`](contracts/VulnerableVaultFixed.sol) |
-| Presentation slides (Day 4) | [`docs/slides/Presentation_EN.pptx`](docs/slides/Presentation_EN.pptx) |
 | Raw Slither output (before/after) | [`docs/slither/`](docs/slither/) |
 | Exploit + fix-verification tests | [`test/`](test/) |
 
@@ -26,19 +21,15 @@ proves every fix actually holds — not just a written claim.
 ```
 contracts/
   VulnerableVault.sol           # the original, vulnerable contract (unmodified)
-  VulnerableVaultFixed.sol      # corrected version — every fix tagged with its finding ID
+  VulnerableVaultFixed.sol      # corrected version -every fix tagged with its finding ID
   mocks/
     MockRewardToken.sol         # minimal ERC20-like token used only by the test suite
     ReentrancyAttacker.sol      # PoC attacker contract for finding H-01
     OnlyOwnerTxOriginDemo.sol   # isolated harness + phisher contract for finding M-01
     PickWinnerCaller.sol        # helper used to prove pickWinner()'s contract-caller guard
 test/
-  VulnerableVault.exploits.test.js   # 7 tests — actively EXPLOITS the vulnerable contract
-  VulnerableVaultFixed.test.js       # 7 tests — proves the fixed contract blocks/handles each attack
-docs/
-  report/     # the audit report, EN + FR, as .docx and .pdf
-  slides/     # the Day 4 presentation, as .pptx and .pdf
-  slither/    # full, unedited Slither console output for both contracts
+  VulnerableVault.exploits.test.js   # 7 tests -actively EXPLOITS the vulnerable contract
+  VulnerableVaultFixed.test.js       # 7 tests -proves the fixed contract blocks/handles each attack
 scripts/
   compile.js, make_std_input.js, run_slither.sh   # build tooling (see "Reproducing this audit" below)
 ```
@@ -58,17 +49,17 @@ scripts/
 | L-02 | `receive()` bypasses the `Deposited` event / staker bookkeeping | Low |
 
 Full write-ups (vulnerable code, impact, fix, and the test that proves each one) are in the
-audit report. Two of the four High findings — H-02 and H-04 — are **business-logic bugs
+audit report. Two of the four High findings -H-02 and H-04 -are **business-logic bugs
 that Slither's default detectors do not flag**; they were only found by asking, for every
-function, "who can call this, and can it be gamed?" — exactly as the project brief predicts.
+function, "who can call this, and can it be gamed?" -exactly as the project brief predicts.
 
-## Full hands-on guide — reproducing the audit on Kali Linux
+## Full hands-on guide -reproducing the audit on Kali Linux
 
 This section spells out **every single command**, in order, to actually run the tests and
 the Slither analysis on a Kali Linux machine, starting from nothing but a stock Kali
 install. Copy-paste the commands as-is.
 
-### Step 0 — Get the project
+### Step 0 -Get the project
 
 If you have the `VulnerableVault-Security-Audit.zip` file:
 
@@ -84,7 +75,7 @@ Confirm you're in the right place (you should see `contracts/`, `test/`, `docs/`
 ls
 ```
 
-### Step 1 — Check / install prerequisites
+### Step 1 -Check / install prerequisites
 
 Kali is Debian-based, so `apt` is available. You need **Node.js ≥ 18**, `npm`, and
 **Python 3 + pip** (for Slither, in Step 6).
@@ -118,7 +109,7 @@ Also make sure `unzip` and `git` are present (usually already are on Kali):
 sudo apt install -y unzip git
 ```
 
-### Step 2 — Install the project's Node dependencies
+### Step 2 -Install the project's Node dependencies
 
 From the project root (`vulnerablevault-audit/`):
 
@@ -135,10 +126,10 @@ added 640 packages, and audited 641 packages in 25s
 found 0 vulnerabilities
 ```
 
-You may see `npm warn deprecated ...` warnings — that's normal and harmless, they come from
+You may see `npm warn deprecated ...` warnings -that's normal and harmless, they come from
 Hardhat's own transitive dependencies.
 
-### Step 3 — Compile the contracts
+### Step 3 -Compile the contracts
 
 On Kali, with full internet access, Hardhat's **native** compilation works out of the box
 (it downloads the official `solc` binary on first run):
@@ -156,11 +147,11 @@ Compiled 10 Solidity files successfully (evm target: paris).
 
 > The repo already ships a pre-built `artifacts/` folder (produced with a fallback solc-js
 > compiler, because the environment this project was prepared in couldn't reach
-> `binaries.soliditylang.org` — see *"Why a custom compile script?"* below). On your Kali
+> `binaries.soliditylang.org` -see *"Why a custom compile script?"* below). On your Kali
 > box, ignore that detail: `npx hardhat compile` regenerates the artifacts normally with
 > the real `solc`, which is actually preferable.
 
-### Step 4 — Run the FULL test suite
+### Step 4 -Run the FULL test suite
 
 This is the core command: it **actually exploits** the vulnerable contract, then proves the
 fixed contract blocks every attack.
@@ -205,7 +196,7 @@ little faster.)
 **If you see `14 passing` with zero `failing`, the audit has been fully reproduced and
 verified on your own machine.**
 
-### Step 5 — Run tests individually (handy for the defense / Q&A)
+### Step 5 -Run tests individually (handy for the defense / Q&A)
 
 Run only the **exploits** against the vulnerable contract:
 
@@ -219,7 +210,7 @@ Run only the **fix verification** suite:
 npx hardhat test test/VulnerableVaultFixed.test.js
 ```
 
-Run a single named test — e.g. only the H-01 reentrancy demo (handy to isolate one finding
+Run a single named test -e.g. only the H-01 reentrancy demo (handy to isolate one finding
 during the Day 4 Q&A):
 
 ```bash
@@ -229,9 +220,9 @@ npx hardhat test --grep "H-01"
 Swap `"H-01"` for `"H-02"`, `"H-04"`, `"M-01"`, etc. to isolate any other finding. The
 default reporter already prints the full hierarchy and per-test timings, as shown above.
 
-### Step 6 — Install and run Slither natively
+### Step 6 -Install and run Slither natively
 
-On Kali, with internet access, Slither installs and runs normally — no need for the
+On Kali, with internet access, Slither installs and runs normally -no need for the
 solc-js wrapper used to prepare this repo (see the next section):
 
 ```bash
@@ -267,7 +258,7 @@ Run Slither on the **fixed** contract:
 slither contracts/VulnerableVaultFixed.sol
 ```
 
-Expected output: **9 findings, all informational** — `reentrancy-eth`, `arbitrary-send-eth`,
+Expected output: **9 findings, all informational** -`reentrancy-eth`, `arbitrary-send-eth`,
 `unchecked-transfer`, and `missing-zero-check` are all gone.
 
 To save the output to a file (handy to attach to your own report):
@@ -286,7 +277,7 @@ deactivate
 The exact console output we obtained is already saved in [`docs/slither/`](docs/slither/)
 for reference, in case you want to compare without reinstalling Slither yourself.
 
-### Step 7 — Troubleshooting (common Kali issues)
+### Step 7 -Troubleshooting (common Kali issues)
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
@@ -299,7 +290,7 @@ for reference, in case you want to compare without reinstalling Slither yourself
 | Slither: `Invalid solc compilation` | Wrong solc version active | `solc-select use 0.8.20`, then re-run |
 | `14 passing` but a test or two runs slower than usual | Normal, depends on machine load | No effect on pass/fail result |
 
-### Step 8 — Clean up / reset
+### Step 8 -Clean up / reset
 
 To start over cleanly (useful if something went wrong):
 
@@ -317,19 +308,19 @@ This sandboxed development environment could not reach `binaries.soliditylang.or
 usual source of the native `solc` binary), so `scripts/compile.js` compiles every contract
 with the **solc-js** npm package instead and writes Hardhat-compatible artifacts directly.
 `scripts/run_slither.sh` similarly wraps `solc-js` so Slither can use it as its compiler
-backend. None of this affects the audit's substance — same compiler version (0.8.20), same
-optimizer settings — it only affects *how* solc was invoked while building this repository.
+backend. None of this affects the audit's substance -same compiler version (0.8.20), same
+optimizer settings -it only affects *how* solc was invoked while building this repository.
 On a normal machine with network access, `npx hardhat compile` and a native `solc` install
 work exactly as usual.
 
 ## Methodology
 
-1. **Static analysis** — Slither (102 detectors), triaged finding-by-finding.
-2. **Manual review** — every function read against "who can call this, and can it be
+1. **Static analysis** -Slither (102 detectors), triaged finding-by-finding.
+2. **Manual review** -every function read against "who can call this, and can it be
    gamed?", independent of tooling.
-3. **Proof of concept** — a Hardhat test that actively exploits the vulnerable contract for
+3. **Proof of concept** -a Hardhat test that actively exploits the vulnerable contract for
    every finding, not just an assertion about a code pattern.
-4. **Fix verification** — the identical attack re-run against the corrected contract, proving
+4. **Fix verification** -the identical attack re-run against the corrected contract, proving
    it now reverts, is rejected, or is otherwise safely handled.
 
 ## Group
@@ -338,5 +329,5 @@ work exactly as usual.
 - **Members:** `[SURNAME Firstname]`, `[SURNAME Firstname]`, `[SURNAME Firstname]`, `[SURNAME Firstname]`
 - **Submission date:** `[SUBMISSION DATE]`
 
-*(Fill in the placeholders above before submitting — every member must upload the same
+*(Fill in the placeholders above before submitting -every member must upload the same
 deliverables individually on Teams, per the project brief.)*
