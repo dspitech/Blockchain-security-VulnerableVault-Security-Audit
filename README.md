@@ -1,15 +1,15 @@
 # Smart Contract Security Audit -VulnerableVault.sol
 
-**ÉSTIAM Paris · 4BLOCKC / E4CCSN -Blockchain Security · Final Project**
-Trainer: David de Paula Santos Silva
-
-## Group
-
-| Élément | Information |
+| Item | Information |
 |---|---|
-| **Nom du groupe** | `BlockHash` |
-| **Membres** | `Fatou FATY`<br>`Pape LO`<br>`ELODIE IPARRAGUIRRE`<br>`Olivier POLYNICE` |
-| **Date de soumission** | `27/08/2026` |
+| **Institution** | **ÉSTIAM Paris** |
+| **Class / Program** | `4BLOCKC / E4CCSN - Blockchain Security` |
+| **Project** | **Final Project** |
+| **Trainer** | David de Paula Santos Silva |
+| **Group Name** | `BlockHash` |
+| **Members** | `Fatou FATY`<br>`Pape LO`<br>`ELODIE IPARRAGUIRRE`<br>`Olivier POLYNICE` |
+| **Submission Date** | `27/08/2026` |
+
 
 
 
