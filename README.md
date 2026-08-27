@@ -11,8 +11,6 @@
 | **Submission Date** | `27/08/2026` |
 
 
-
-
 A full security audit of `VulnerableVault.sol`, a staking vault seeded with 9 deliberately
 planted vulnerabilities (4 High, 3 Medium, 2 Low). This repository contains everything the
 project brief asks for, plus working proof-of-concept exploits and a regression suite that
@@ -75,9 +73,23 @@ If you have the `VulnerableVault-Security-Audit.zip` file:
 
 ```bash
 mkdir -p ~/audit && cd ~/audit
+```
+
+<img width="831" height="410" alt="image" src="https://github.com/user-attachments/assets/01a7e07b-91f7-412b-9b67-69dd664744d9" />
+
+
+```bash
 git clone https://github.com/dspitech/Blockchain-security-VulnerableVault-Security-Audit.git
+```
+
+<img width="1667" height="645" alt="image" src="https://github.com/user-attachments/assets/6d4682f5-9ee8-4176-9643-b4d5f63c98de" />
+
+```bash
 cd Blockchain-security-VulnerableVault-Security-Audit
 ```
+
+<img width="1632" height="572" alt="image" src="https://github.com/user-attachments/assets/c70f0a9f-06a5-4c4c-8f28-bb8353043c61" />
+
 
 Confirm you're in the right place (you should see `contracts/`, `test/`, `docs/`):
 
@@ -97,6 +109,9 @@ npm --version
 python3 --version
 ```
 
+<img width="1355" height="577" alt="image" src="https://github.com/user-attachments/assets/41ca4835-2353-4336-9fca-cab88fe11fc0" />
+
+
 **If `node --version` fails or shows a version below 18**, install Node.js via NodeSource
 (Kali's own repo version can be outdated):
 
@@ -113,6 +128,12 @@ sudo apt update
 sudo apt install -y python3 python3-pip python3-venv
 ```
 
+<img width="1846" height="720" alt="image" src="https://github.com/user-attachments/assets/3bc36f7c-f6dd-4a7d-a1b3-e2b199336852" />
+
+<img width="1851" height="996" alt="image" src="https://github.com/user-attachments/assets/715f52ef-1dec-4a0d-a023-920ca4a79628" />
+
+
+
 ### Step 2 -Install the project's Node dependencies
 
 From the project root (`vulnerablevault-audit/`):
@@ -120,6 +141,9 @@ From the project root (`vulnerablevault-audit/`):
 ```bash
 npm install
 ```
+
+<img width="1907" height="832" alt="image" src="https://github.com/user-attachments/assets/dedf9f9e-f60b-4f74-b80e-de2d652b2bc7" />
+
 
 This installs Hardhat, `@nomicfoundation/hardhat-toolbox`, `solc`, and everything the tests
 need, into a local `node_modules/` folder (about a minute, ~600 packages). You'll see a
@@ -139,15 +163,32 @@ On Kali, with full internet access, Hardhat's **native** compilation works out o
 (it downloads the official `solc` binary on first run):
 
 ```bash
+rm -rf node_modules package-lock.json
+
+- Installation de Hardhat 2
+npm install --save-dev hardhat@^2.28.0
+
+- Installation du Toolbox compatible
+npm install --save-dev "@nomicfoundation/hardhat-toolbox@hh2"
+
+Vérification
+npx hardhat --version
+
+On doit obtenir une version 2.x.
+
+Restauration de la configuration
+Comme on revient à Hardhat 2, il faut supprimer le mode ESM :
+
+npm pkg delete type
+
+- Compiler
 npx hardhat compile
 ```
 
-Expected output:
+<img width="1235" height="301" alt="image" src="https://github.com/user-attachments/assets/77878e21-9e6f-4287-9f0a-c4c63967de1e" />
 
-```
-Downloading compiler 0.8.20
-Compiled 10 Solidity files successfully (evm target: paris).
-```
+<img width="1622" height="497" alt="image" src="https://github.com/user-attachments/assets/0aba29b2-d400-45a1-80c5-175308f6b865" />
+
 
 > The repo already ships a pre-built `artifacts/` folder (produced with a fallback solc-js
 > compiler, because the environment this project was prepared in couldn't reach
@@ -164,38 +205,8 @@ fixed contract blocks every attack.
 npx hardhat test
 ```
 
-(If you already compiled in Step 3, `npx hardhat test --no-compile` also works and is a
-little faster.)
+<img width="1927" height="982" alt="image" src="https://github.com/user-attachments/assets/8efeea91-8ad2-4b1a-a099-071d4b42c8b3" />
 
-**Full expected output** (millisecond timings may vary slightly):
-
-```
-  VulnerableVault - exploit demonstrations
-      -> Mallory deposited 1 ETH, walked away with 9.0 ETH. Vault ETH balance dropped from 10 to 2.0.
-    ✔ [H-01] reentrancy in withdraw() drains more ETH than the attacker deposited
-      -> Mallory (0x...) is now the owner, no permission needed.
-    ✔ [H-02] setOwner() has no access control - anyone can take over the vault
-      -> Mallory drained all 8 ETH belonging to Alice and Bob, who staked in good faith.
-    ✔ [H-03] emergencyWithdraw() has no access control - anyone can drain all staked ETH
-      -> Mallory staked 20 wei total (vs Alice's 10 ETH) but holds 20 of 21 lottery slots (~95% win chance)...
-    ✔ [H-04] logic bug: dust-depositing inflates a staker's odds in pickWinner()
-      -> tx.origin auth let the phisher contract reassign ownership to Mallory.
-    ✔ [M-01] onlyOwner's tx.origin check can be phished through a malicious intermediary
-    ✔ [M-03] a reward token that returns false is silently ignored - reward is lost, not retried
-
-  VulnerableVaultFixed - fixes verified
-    ✔ [H-01] reentrancy attack now reverts, attacker recovers only their own deposit
-    ✔ [H-02] setOwner is gone; only the owner can propose a new owner, and it must be accepted
-    ✔ [H-03] emergencyWithdraw() now reverts for anyone but the owner
-      -> Mallory now occupies exactly 1 of 2 staker slots; her win probability is ~20 / (10e18 + 20) ≈ 0%...
-    ✔ [H-04] reward odds are now proportional to stake, not to array slot count
-    ✔ [H-04b] a staker who fully withdraws is removed from the reward pool
-    ✔ [M-03] a failing reward transfer is reported via RewardTransferFailed, not swallowed
-    ✔ [M-02] pickWinner() rejects contract callers to close the same-tx manipulation window
-    ✔ [L-01] zero address is rejected on ownership transfer and emergency withdraw
-
-  14 passing (2s)
-```
 
 **If you see `14 passing` with zero `failing`, the audit has been fully reproduced and
 verified on your own machine.**
@@ -208,11 +219,15 @@ Run only the **exploits** against the vulnerable contract:
 npx hardhat test test/VulnerableVault.exploits.test.js
 ```
 
+<img width="1911" height="910" alt="image" src="https://github.com/user-attachments/assets/a2a74918-6775-4a6e-9b1e-408d292de2be" />
+
+
 Run only the **fix verification** suite:
 
 ```bash
 npx hardhat test test/VulnerableVaultFixed.test.js
 ```
+<img width="1890" height="902" alt="image" src="https://github.com/user-attachments/assets/722b4827-c572-432e-b5ac-6e651847fc6a" />
 
 Run a single named test -e.g. only the H-01 reentrancy demo (handy to isolate one finding
 during the Day 4 Q&A):
@@ -220,6 +235,9 @@ during the Day 4 Q&A):
 ```bash
 npx hardhat test --grep "H-01"
 ```
+
+<img width="1761" height="737" alt="image" src="https://github.com/user-attachments/assets/5dec65ab-c283-42f7-a0f3-2ea0fe27b4fb" />
+
 
 Swap `"H-01"` for `"H-02"`, `"H-04"`, `"M-01"`, etc. to isolate any other finding. The
 default reporter already prints the full hierarchy and per-test timings, as shown above.
@@ -233,9 +251,11 @@ solc-js wrapper used to prepare this repo (see the next section):
 # A Python virtual environment is recommended (avoids conflicts with Kali's system packages)
 python3 -m venv ~/audit/venv
 source ~/audit/venv/bin/activate
-
 pip install slither-analyzer solc-select
 ```
+
+<img width="1892" height="1002" alt="image" src="https://github.com/user-attachments/assets/e7a0f9b9-01e4-4ef8-a7aa-4a24891a7bb3" />
+
 
 Install and select the exact Solidity version this project uses (0.8.20):
 
@@ -245,12 +265,19 @@ solc-select use 0.8.20
 solc --version   # should confirm 0.8.20
 ```
 
+<img width="1610" height="692" alt="image" src="https://github.com/user-attachments/assets/c873cf6f-8f0a-472a-a5c7-d0c9ccb51f34" />
+
+
 Run Slither on the **vulnerable** contract:
 
 ```bash
-cd ~/audit/vulnerablevault-audit
 slither contracts/VulnerableVault.sol
 ```
+
+<img width="1901" height="1002" alt="image" src="https://github.com/user-attachments/assets/e0fde469-df2b-4b20-9151-ce7043443790" />
+
+<img width="1916" height="997" alt="image" src="https://github.com/user-attachments/assets/2e4b4481-f82f-42ed-8e06-19d5352b7fc5" />
+
 
 Expected output (summary): **14 findings**, including `reentrancy-eth`,
 `arbitrary-send-eth`, `weak-prng`, `unchecked-transfer`, `missing-zero-check`, plus a few
@@ -261,6 +288,9 @@ Run Slither on the **fixed** contract:
 ```bash
 slither contracts/VulnerableVaultFixed.sol
 ```
+
+<img width="1917" height="1016" alt="image" src="https://github.com/user-attachments/assets/7ee61f79-af06-4575-999e-c5955f96d4f7" />
+
 
 Expected output: **9 findings, all informational** -`reentrancy-eth`, `arbitrary-send-eth`,
 `unchecked-transfer`, and `missing-zero-check` are all gone.
